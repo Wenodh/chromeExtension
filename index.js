@@ -2,6 +2,7 @@ let myLeads = [];
 
 const inputEl = document.getElementById('input-el');
 const inputBtn = document.getElementById('input-btn');
+const searchBtn = document.getElementById('search-btn');
 const ulEl = document.getElementById('ul-el');
 const deletBtn = document.getElementById('delete-btn');
 const tabBtn = document.getElementById('tab-btn');
@@ -26,11 +27,17 @@ function render(leads) {
 }
 
 tabBtn.addEventListener('click', function () {
+    //get the current tab url
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         myLeads.push(tabs[0].url);
+
         localStorage.setItem('myLeads', JSON.stringify(myLeads));
         render(myLeads);
     });
+});
+
+searchBtn.addEventListener('click', () => {
+    render(myLeads.filter((it) => it.includes(inputEl.value)));
 });
 
 inputBtn.addEventListener('click', () => {
@@ -40,6 +47,7 @@ inputBtn.addEventListener('click', () => {
     localStorage.setItem('myLeads', JSON.stringify(myLeads));
     render(myLeads);
 });
+
 deletBtn.addEventListener('dblclick', () => {
     localStorage.clear();
     myLeads = [];
